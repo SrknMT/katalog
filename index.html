@@ -108,7 +108,6 @@
             <div class="p-6 overflow-y-auto flex-1">
                 <form id="productForm" class="space-y-5">
                     <input type="hidden" id="p_id"> 
-                    <input type="hidden" id="p_existing_img"> <!-- Eski görsel linkini tutar -->
 
                     <div>
                         <label class="block text-sm font-bold text-slate-700 mb-2">Ürün Fotoğrafı</label>
@@ -116,7 +115,7 @@
                             <label class="flex flex-col items-center justify-center w-full h-40 border-2 border-slate-300 border-dashed rounded-xl cursor-pointer bg-slate-50 hover:bg-slate-100 transition-colors relative overflow-hidden">
                                 <div class="flex flex-col items-center justify-center pt-5 pb-6" id="uploadPlaceholder">
                                     <i class="ph-regular ph-upload-simple text-3xl text-slate-400 mb-2"></i>
-                                    <p class="text-sm text-slate-500 font-medium text-center px-4">Fotoğraf seçmek için dokunun (Hızlı Yükleme)</p>
+                                    <p class="text-sm text-slate-500 font-medium">Fotoğraf seçmek/değiştirmek için dokunun</p>
                                 </div>
                                 <img id="imagePreview" class="hidden absolute inset-0 w-full h-full object-cover">
                                 <input type="file" id="imageInput" accept="image/*" class="hidden" onchange="previewImage(this)" />
@@ -143,30 +142,35 @@
 
                     <div>
                         <label class="block text-xs font-bold text-slate-600 mb-1">Genel Açıklama / Not</label>
-                        <textarea id="p_desc" rows="2" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-sky-500 outline-none"></textarea>
+                        <textarea id="p_desc" rows="2" placeholder="Ürünle ilgili genel bilgi..." class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-sky-500 outline-none"></textarea>
                     </div>
 
                     <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
                         <div class="text-sm font-bold text-indigo-900 mb-3 flex justify-between items-center">
                             <span><i class="ph-fill ph-printer"></i> Üretim Verileri</span>
+                            <button type="button" onclick="openSettingsModal()" class="text-xs bg-indigo-200 text-indigo-800 px-2 py-1 rounded hover:bg-indigo-300">Fiyat Ayarları</button>
                         </div>
                         <div class="grid grid-cols-3 gap-3">
                             <div>
                                 <label class="block text-[10px] uppercase font-bold text-indigo-700 mb-1">Filament (Gr)</label>
-                                <input type="number" id="p_gram" oninput="autoCalculate()" class="w-full border border-indigo-200 rounded-lg p-2 text-sm outline-none font-bold">
+                                <input type="number" id="p_gram" oninput="autoCalculate()" placeholder="Örn: 150" min="0" class="w-full border border-indigo-200 rounded-lg p-2 text-sm outline-none font-bold">
                             </div>
                             <div>
                                 <label class="block text-[10px] uppercase font-bold text-indigo-700 mb-1">Süre (Dakika)</label>
-                                <input type="number" id="p_time" oninput="autoCalculate()" class="w-full border border-indigo-200 rounded-lg p-2 text-sm outline-none font-bold">
+                                <input type="number" id="p_time" oninput="autoCalculate()" placeholder="Örn: 120" min="0" class="w-full border border-indigo-200 rounded-lg p-2 text-sm outline-none font-bold">
                             </div>
                             <div>
                                 <label class="block text-[10px] uppercase font-bold text-indigo-700 mb-1">Ek Aksesuar (₺)</label>
-                                <input type="number" id="p_acc" oninput="autoCalculate()" class="w-full border border-indigo-200 rounded-lg p-2 text-sm outline-none font-bold">
+                                <input type="number" id="p_acc" oninput="autoCalculate()" placeholder="Varsa tutar" min="0" step="0.01" class="w-full border border-indigo-200 rounded-lg p-2 text-sm outline-none font-bold">
                             </div>
                         </div>
                     </div>
 
                     <div class="bg-sky-50 p-4 rounded-xl border border-sky-100 space-y-4">
+                        <div class="flex items-center justify-between border-b border-sky-200 pb-2">
+                            <span class="text-sm font-bold text-sky-900"><i class="ph-fill ph-calculator"></i> Maliyet & Fiyatlandırma</span>
+                        </div>
+                        
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-[10px] uppercase font-bold text-slate-500 mb-1">Hesaplanan Maliyet (₺)</label>
@@ -178,6 +182,7 @@
                                 <input type="number" id="p_margin" value="40" min="0" oninput="autoCalculate()" class="w-full border-2 border-sky-300 bg-white rounded-lg p-2.5 text-lg font-bold text-sky-800 text-center outline-none">
                             </div>
                         </div>
+
                         <div>
                             <label class="block text-xs font-bold text-slate-700 mb-1">Önerilen Satış Fiyatı (₺)</label>
                             <input type="number" id="p_price" step="0.01" min="0" required class="w-full border-2 border-emerald-400 bg-white rounded-lg p-3 text-xl font-black text-emerald-700 text-center outline-none shadow-sm focus:border-emerald-500">
@@ -195,15 +200,18 @@
         </div>
     </div>
 
+    <!-- SCRIPT -->
     <script>
-        // --- BURAYI DOLDURUN ---
         const API_URL = "https://script.google.com/macros/s/AKfycbz7QIZ2srqV_FlNRdgd0pHeQNX2MczNPMElkDrO_0P58mr6h7VnZYQUQktSE59LHpBmxg/exec";
-        const IMGBB_API_KEY = "b9a0c312e1e3d3a4ebefa2ddd5602a2c"; // <-- ImgBB'den aldığınız şifreyi buraya yapıştırın!
         
         let products = [];
-        let selectedImageFile = null;
+        let imageBase64 = "";
+        let imageFileName = "";
 
-        let settings = JSON.parse(localStorage.getItem('mete3d_settings')) || { filKgPrice: 400, hourlyRate: 20 };
+        let settings = JSON.parse(localStorage.getItem('mete3d_settings')) || {
+            filKgPrice: 400, 
+            hourlyRate: 20
+        };
 
         window.onload = () => {
             fetchProducts();
@@ -220,26 +228,41 @@
             localStorage.setItem('mete3d_settings', JSON.stringify(settings));
             
             const btn = document.getElementById('saveSetBtn');
-            btn.innerHTML = 'Revize Ediliyor...'; btn.disabled = true;
+            btn.innerHTML = '<i class="ph-bold ph-spinner-gap animate-spin"></i> Revize Ediliyor...';
+            btn.disabled = true;
 
             let updates = [];
             products.forEach(p => {
-                const gram = parseFloat(p.Gram) || 0; const dk = parseFloat(p.Dakika) || 0; const acc = parseFloat(p["Ek Aksesuar"]) || 0;
-                const oldCost = parseFloat(p.Maliyet) || 0; const oldPrice = parseFloat(p["Satis Fiyati"]) || 0;
+                const gram = parseFloat(p.Gram) || 0;
+                const dk = parseFloat(p.Dakika) || 0;
+                const acc = parseFloat(p["Ek Aksesuar"]) || 0;
+                const oldCost = parseFloat(p.Maliyet) || 0;
+                const oldPrice = parseFloat(p["Satis Fiyati"]) || 0;
+
                 const newCost = ((gram / 1000) * settings.filKgPrice) + ((dk / 60) * settings.hourlyRate) + acc;
+                
                 if((gram > 0 || dk > 0) && Math.abs(newCost - oldCost) > 0.01) {
                     let margin = 0.40;
                     if(oldPrice > oldCost && oldPrice > 0) margin = (oldPrice - oldCost) / oldPrice;
-                    updates.push({ ID: p.ID, Maliyet: newCost, SatisFiyati: Math.ceil(newCost / (1 - margin)) });
+                    const newPrice = newCost / (1 - margin);
+                    updates.push({ ID: p.ID, Maliyet: newCost, SatisFiyati: Math.ceil(newPrice) });
                 }
             });
 
             if(updates.length > 0) {
-                document.getElementById('loadingText').innerText = "Fiyatlar revize ediliyor...";
-                document.getElementById('loading').classList.remove('hidden'); document.getElementById('productsGrid').classList.add('hidden');
-                try { await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'bulkUpdate', updates: updates }) }); } catch(e) {}
+                document.getElementById('loadingText').innerText = "Toplu fiyat revizyonu yapılıyor...";
+                document.getElementById('loading').classList.remove('hidden');
+                document.getElementById('productsGrid').classList.add('hidden');
+                
+                try {
+                    await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'bulkUpdate', updates: updates }) });
+                } catch(e) {}
             }
-            btn.innerHTML = 'Kaydet & Güncelle'; btn.disabled = false; closeSettingsModal(); fetchProducts();
+
+            btn.innerHTML = 'Kaydet & Güncelle';
+            btn.disabled = false;
+            closeSettingsModal();
+            fetchProducts();
         }
 
         async function fetchProducts() {
@@ -248,6 +271,7 @@
             try {
                 const response = await fetch(API_URL);
                 products = await response.json();
+                
                 document.getElementById('loading').classList.add('hidden');
                 
                 if(!products || products.length === 0) {
@@ -258,33 +282,44 @@
                     document.getElementById('productsGrid').classList.remove('hidden');
                     renderProducts(products);
                 }
-            } catch (error) { alert("Veriler çekilirken bir hata oluştu."); }
+            } catch (error) {
+                alert("Veriler çekilirken bir hata oluştu.");
+            }
         }
 
         function renderProducts(dataList) {
-            const grid = document.getElementById('productsGrid'); grid.innerHTML = '';
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+            
             dataList.forEach(p => {
-                let imgUrl = (p["Fotograf URL"] && p["Fotograf URL"].trim() !== "") ? p["Fotograf URL"] : 'https://placehold.co/400x300/e2e8f0/94a3b8?text=Gorsel+Yok';
+                const imgUrl = (p["Fotograf URL"] && p["Fotograf URL"].trim() !== "") ? p["Fotograf URL"] : 'https://placehold.co/400x300/e2e8f0/94a3b8?text=Gorsel+Yok';
                 
-                // Eğer eski sistemden kalan Google Drive linkleri varsa onları gösterilebilir formata çevir
-                if (imgUrl.includes('drive.google.com/file/d/')) {
-                    const match = imgUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-                    if (match && match[1]) imgUrl = `https://drive.google.com/uc?export=view&id=${match[1]}`;
-                }
-
+                // Güvenli sayı dönüşümleri (Çılgın rakamları engellemek için)
                 const cost = isNaN(parseFloat(p.Maliyet)) ? 0 : parseFloat(p.Maliyet);
                 const price = isNaN(parseFloat(p["Satis Fiyati"])) ? 0 : parseFloat(p["Satis Fiyati"]);
-                let profitRate = (price > 0 && price > cost) ? ((price - cost) / price) * 100 : 0;
                 
-                const techDetails = [parseFloat(p.Gram)>0 ? `${p.Gram} gr` : '', parseFloat(p.Dakika)>0 ? `${p.Dakika} dk` : ''].filter(Boolean).join(' | ');
+                let profitRate = 0;
+                if(price > 0 && price > cost) {
+                    profitRate = ((price - cost) / price) * 100;
+                }
+                
+                const gramStr = parseFloat(p.Gram) > 0 ? `${p.Gram} gr` : '';
+                const minStr = parseFloat(p.Dakika) > 0 ? `${p.Dakika} dk` : '';
+                const techDetails = [gramStr, minStr].filter(Boolean).join(' | ');
+
                 const safeP = encodeURIComponent(JSON.stringify(p));
 
                 const card = `
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-lg transition-shadow duration-300 flex flex-col relative">
                     <div class="absolute top-2 right-2 flex gap-1 z-10">
-                        <button onclick="editProduct('${safeP}')" class="bg-white/90 hover:bg-sky-500 hover:text-white text-slate-700 p-2 rounded-lg backdrop-blur shadow-sm"><i class="ph-bold ph-pencil-simple"></i></button>
-                        <button onclick="deleteProduct('${p.ID}')" class="bg-white/90 hover:bg-rose-500 hover:text-white text-rose-500 p-2 rounded-lg backdrop-blur shadow-sm"><i class="ph-bold ph-trash"></i></button>
+                        <button onclick="editProduct('${safeP}')" class="bg-white/90 hover:bg-sky-500 hover:text-white text-slate-700 p-2 rounded-lg backdrop-blur shadow-sm transition-colors" title="Düzenle">
+                            <i class="ph-bold ph-pencil-simple"></i>
+                        </button>
+                        <button onclick="deleteProduct('${p.ID}')" class="bg-white/90 hover:bg-rose-500 hover:text-white text-rose-500 p-2 rounded-lg backdrop-blur shadow-sm transition-colors" title="Sil">
+                            <i class="ph-bold ph-trash"></i>
+                        </button>
                     </div>
+
                     <div class="h-48 overflow-hidden bg-slate-100 relative group cursor-pointer" onclick="window.open('${imgUrl}', '_blank')">
                         <img src="${imgUrl}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                         <span class="absolute top-3 left-3 bg-slate-900/70 text-white backdrop-blur text-[10px] font-bold px-2 py-1 rounded-md">${p.Kategori || 'Genel'}</span>
@@ -296,16 +331,19 @@
                         
                         <div class="mt-auto pt-3 border-t border-slate-100 space-y-2">
                             <div class="flex justify-between text-xs">
-                                <span class="text-slate-500 font-medium">Maliyet:</span>
+                                <span class="text-slate-500 font-medium">Hesaplanan Maliyet:</span>
                                 <span class="font-bold text-slate-700">${cost.toFixed(2)} ₺</span>
                             </div>
                             <div class="flex justify-between items-center pt-1">
-                                <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-100">%${profitRate.toFixed(0)} Brüt Kâr</span>
+                                <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-100">
+                                    %${profitRate.toFixed(0)} Brüt Kâr
+                                </span>
                                 <span class="text-xl font-black text-slate-900">${price.toFixed(2)} ₺</span>
                             </div>
                         </div>
                     </div>
-                </div>`;
+                </div>
+                `;
                 grid.innerHTML += card;
             });
         }
@@ -319,126 +357,153 @@
         function openModal() {
             document.getElementById('productForm').reset();
             document.getElementById('modalTitle').innerHTML = '<i class="ph-fill ph-plus-circle text-sky-500 text-xl"></i> Ürün Ekle';
-            document.getElementById('p_id').value = ""; document.getElementById('p_existing_img').value = "";
-            document.getElementById('imagePreview').src = ''; document.getElementById('imagePreview').classList.add('hidden');
+            document.getElementById('p_id').value = ""; 
+            
+            document.getElementById('imagePreview').src = '';
+            document.getElementById('imagePreview').classList.add('hidden');
             document.getElementById('uploadPlaceholder').classList.remove('hidden');
-            document.getElementById('p_cost_display').innerText = '0.00 ₺'; document.getElementById('p_cost_hidden').value = 0;
-            selectedImageFile = null;
+            
+            document.getElementById('p_cost_display').innerText = '0.00 ₺';
+            document.getElementById('p_cost_hidden').value = 0;
+            imageBase64 = ""; imageFileName = "";
             document.getElementById('productModal').classList.replace('hidden', 'flex');
         }
 
         function editProduct(encodedProduct) {
             const p = JSON.parse(decodeURIComponent(encodedProduct));
+            
             document.getElementById('modalTitle').innerHTML = '<i class="ph-fill ph-pencil-simple text-blue-500 text-xl"></i> Ürün Düzenle';
             document.getElementById('p_id').value = p.ID;
-            document.getElementById('p_name').value = p["Urun Adi"] || ''; document.getElementById('p_category').value = p.Kategori || 'Figür / Model';
-            document.getElementById('p_desc').value = p.Aciklama || ''; document.getElementById('p_gram').value = p.Gram || '';
-            document.getElementById('p_time').value = p.Dakika || ''; document.getElementById('p_acc').value = p["Ek Aksesuar"] || '';
+            document.getElementById('p_name').value = p["Urun Adi"] || '';
+            document.getElementById('p_category').value = p.Kategori || 'Figür / Model';
+            document.getElementById('p_desc').value = p.Aciklama || '';
+            document.getElementById('p_gram').value = p.Gram || 0;
+            document.getElementById('p_time').value = p.Dakika || 0;
+            document.getElementById('p_acc').value = p["Ek Aksesuar"] || 0;
             
-            let imgUrl = (p["Fotograf URL"] && p["Fotograf URL"].trim() !== "") ? p["Fotograf URL"] : '';
-            if (imgUrl.includes('drive.google.com/file/d/')) {
-                const match = imgUrl.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-                if (match && match[1]) imgUrl = `https://drive.google.com/uc?export=view&id=${match[1]}`;
-            }
-            document.getElementById('p_existing_img').value = imgUrl; // Sakla
-            
+            const imgUrl = (p["Fotograf URL"] && p["Fotograf URL"].trim() !== "") ? p["Fotograf URL"] : '';
             if(imgUrl) {
                 document.getElementById('uploadPlaceholder').classList.add('hidden');
-                document.getElementById('imagePreview').src = imgUrl; document.getElementById('imagePreview').classList.remove('hidden');
+                document.getElementById('imagePreview').src = imgUrl;
+                document.getElementById('imagePreview').classList.remove('hidden');
             } else {
-                document.getElementById('uploadPlaceholder').classList.remove('hidden'); document.getElementById('imagePreview').classList.add('hidden');
+                document.getElementById('uploadPlaceholder').classList.remove('hidden');
+                document.getElementById('imagePreview').classList.add('hidden');
             }
-            selectedImageFile = null; autoCalculate(); 
+            imageBase64 = ""; imageFileName = ""; 
+
+            autoCalculate(); 
             document.getElementById('p_price').value = p["Satis Fiyati"] || 0; 
+
             document.getElementById('productModal').classList.replace('hidden', 'flex');
         }
 
         async function deleteProduct(id) {
             if(!confirm("Bu ürünü silmek istediğinize emin misiniz?")) return;
+            
             document.getElementById('loadingText').innerText = "Ürün siliniyor...";
-            document.getElementById('loading').classList.remove('hidden'); document.getElementById('productsGrid').classList.add('hidden');
-            try { await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'delete', ID: id }) }); fetchProducts(); } catch(e) {}
+            document.getElementById('loading').classList.remove('hidden');
+            document.getElementById('productsGrid').classList.add('hidden');
+
+            try {
+                await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action: 'delete', ID: id }) });
+                fetchProducts();
+            } catch(e) {
+                alert("Silme işlemi başarısız.");
+            }
         }
 
         function closeModal() { document.getElementById('productModal').classList.replace('flex', 'hidden'); }
 
         function previewImage(input) {
             if (input.files && input.files[0]) {
-                selectedImageFile = input.files[0];
-                const reader = new FileReader();
+                var file = input.files[0];
+                var reader = new FileReader();
                 reader.onload = function(e) {
                     document.getElementById('uploadPlaceholder').classList.add('hidden');
-                    document.getElementById('imagePreview').src = e.target.result;
-                    document.getElementById('imagePreview').classList.remove('hidden');
+                    const preview = document.getElementById('imagePreview');
+                    preview.src = e.target.result;
+                    preview.classList.remove('hidden');
+                    imageBase64 = e.target.result;
+                    imageFileName = file.name;
                 }
-                reader.readAsDataURL(input.files[0]);
+                reader.readAsDataURL(file);
             }
         }
 
         function autoCalculate() {
-            const gram = parseFloat(document.getElementById('p_gram').value) || 0; const time = parseFloat(document.getElementById('p_time').value) || 0;
-            const acc = parseFloat(document.getElementById('p_acc').value) || 0; const margin = parseFloat(document.getElementById('p_margin').value) || 40;
-            const totalCost = ((gram / 1000) * settings.filKgPrice) + ((time / 60) * settings.hourlyRate) + acc;
+            const gram = parseFloat(document.getElementById('p_gram').value) || 0;
+            const time = parseFloat(document.getElementById('p_time').value) || 0;
+            const acc = parseFloat(document.getElementById('p_acc').value) || 0;
+            const margin = parseFloat(document.getElementById('p_margin').value) || 40;
+
+            const filCost = (gram / 1000) * settings.filKgPrice;
+            const timeCost = (time / 60) * settings.hourlyRate;
+            const totalCost = filCost + timeCost + acc;
+
             document.getElementById('p_cost_display').innerText = totalCost.toFixed(2) + ' ₺';
             document.getElementById('p_cost_hidden').value = totalCost;
-            if(totalCost > 0) document.getElementById('p_price').value = Math.ceil(totalCost / (1 - (margin / 100)));
-            else document.getElementById('p_price').value = '';
-        }
 
-        // FOTOĞRAFI IMGBB'YE YÜKLEME FONKSİYONU
-        async function uploadToImgBB(file) {
-            const formData = new FormData();
-            formData.append('image', file);
-            try {
-                const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: formData });
-                const data = await res.json();
-                if (data.success) return data.data.url; // Başarılıysa linki ver
-            } catch (error) { console.error("Resim yükleme hatası", error); }
-            return null;
+            if(totalCost > 0) {
+                const price = totalCost / (1 - (margin / 100));
+                document.getElementById('p_price').value = Math.ceil(price);
+            } else {
+                document.getElementById('p_price').value = '';
+            }
         }
 
         async function saveProduct() {
             const id = document.getElementById('p_id').value; 
             const name = document.getElementById('p_name').value;
+            const cat = document.getElementById('p_category').value;
+            const desc = document.getElementById('p_desc').value;
             const cost = document.getElementById('p_cost_hidden').value;
             const price = document.getElementById('p_price').value;
+            const gram = document.getElementById('p_gram').value;
+            const time = document.getElementById('p_time').value;
+            const acc = document.getElementById('p_acc').value;
 
-            if(!name || parseFloat(cost) <= 0 || !price) { alert("Lütfen Ürün Adını, üretim verilerini ve fiyatı doldurun."); return; }
-
-            const btn = document.getElementById('saveBtn'); const originalBtnHtml = btn.innerHTML;
-            btn.innerHTML = '<i class="ph-bold ph-spinner-gap animate-spin"></i> Hızlı Kaydediliyor...'; btn.disabled = true;
-
-            // 1. ÖNCE FOTOĞRAFI IMGBB'YE YÜKLE (Veya Eskisini Koru)
-            let finalImageUrl = document.getElementById('p_existing_img').value; 
-            if(selectedImageFile) {
-                btn.innerHTML = '<i class="ph-bold ph-spinner-gap animate-spin"></i> Fotoğraf Yükleniyor...';
-                const uploadedUrl = await uploadToImgBB(selectedImageFile);
-                if(uploadedUrl) finalImageUrl = uploadedUrl;
-                else { alert("Fotoğraf yüklenemedi, işleminiz resimsiz devam edecek."); finalImageUrl = ""; }
+            if(!name || parseFloat(cost) <= 0 || !price) {
+                alert("Lütfen Ürün Adını, üretim verilerini (Gram/Dk) ve fiyatı kontrol edin.");
+                return;
             }
 
-            // 2. SADECE METİN OLARAK GOOGLE SHEETS'E GÖNDER (1 Saniye sürer)
+            const btn = document.getElementById('saveBtn');
+            const originalBtnHtml = btn.innerHTML;
+            btn.innerHTML = '<i class="ph-bold ph-spinner-gap animate-spin"></i> Kaydediliyor...';
+            btn.disabled = true;
+
             const payload = {
                 action: id ? 'update' : 'create', 
                 ID: id,
                 UrunAdi: name,
-                Kategori: document.getElementById('p_category').value,
-                Aciklama: document.getElementById('p_desc').value,
+                Kategori: cat,
+                Aciklama: desc,
                 Maliyet: cost,
                 SatisFiyati: price,
-                Gram: document.getElementById('p_gram').value || 0,
-                Dakika: document.getElementById('p_time').value || 0,
-                EkAksesuar: document.getElementById('p_acc').value || 0,
-                FotografURL: finalImageUrl // Doğrudan link gönderilir
+                Gram: gram || 0,
+                Dakika: time || 0,
+                EkAksesuar: acc || 0,
+                imageContent: imageBase64,
+                imageFileName: imageFileName
             };
 
             try {
                 const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(payload) });
                 const result = await res.json();
-                if(result.status === "success") { closeModal(); fetchProducts(); } 
-                else alert("Kayıt sırasında hata: " + result.message);
-            } catch(e) { alert("Bağlantı hatası yaşandı."); } 
-            finally { btn.innerHTML = originalBtnHtml; btn.disabled = false; }
+                
+                if(result.status === "success") {
+                    closeModal();
+                    fetchProducts();
+                } else {
+                    alert("Kayıt sırasında hata: " + result.message);
+                }
+            } catch(e) {
+                alert("Bağlantı hatası yaşandı.");
+            } finally {
+                btn.innerHTML = originalBtnHtml;
+                btn.disabled = false;
+            }
         }
     </script>
 </body>
