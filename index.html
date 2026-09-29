@@ -67,10 +67,10 @@
                 <!-- SADECE ADMİN GİRİŞ YAPINCA GÖRÜNECEK BUTONLAR -->
                 <div id="adminTopControls" class="hidden items-center gap-2">
                     <button onclick="openSettingsModal()" class="bg-slate-800 hover:bg-slate-700 text-white p-2 sm:p-2.5 rounded-lg shadow-md border border-slate-700">
-                        <i class="ph-bold ph-gear text-lg"></i>
+                    <i class="ph-bold ph-gear text-lg"></i>
                     </button>
                     <button onclick="openModal()" class="bg-sky-500 hover:bg-sky-400 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg text-sm font-bold flex items-center gap-2 shadow-md">
-                        <i class="ph-bold ph-plus text-lg"></i> <span class="hidden sm:inline">Yeni Ürün</span>
+                    <i class="ph-bold ph-plus text-lg"></i> <span class="hidden sm:inline">Yeni Ürün</span>
                     </button>
                 </div>
             </div>
@@ -169,7 +169,7 @@
                 </div>
                 <div class="border-t border-slate-100 pt-3">
                     <label class="block text-xs font-bold text-slate-600 mb-1">WhatsApp Sipariş Numaranız</label>
-                    <input type="text" id="s_phone" placeholder="905xxxxxxxxx" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-sky-500 outline-none">
+                    <input type="text" id="s_phone" placeholder="905xxxx" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm focus:border-sky-500 outline-none">
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-1">Filament Kilo Fiyatı (1 KG / ₺)</label>
@@ -201,79 +201,79 @@
                     <input type="hidden" id="p_existing_img">
 
                     <div class="flex gap-4">
-                        <div class="flex-1">
-                            <label class="block text-sm font-bold text-slate-700 mb-2">Ürün Fotoğrafları</label>
-                            <label class="flex flex-col items-center justify-center w-full h-28 border-2 border-slate-300 border-dashed rounded-xl cursor-pointer bg-slate-50 relative overflow-hidden">
-                                <div class="flex flex-col items-center justify-center pt-5 pb-6" id="uploadPlaceholder">
-                                    <i class="ph-regular ph-upload-simple text-3xl text-slate-400 mb-2"></i>
-                                    <p class="text-[11px] text-slate-500 px-4 text-center">Fotoğraf Seç (çoklu seçim yapabilirsin)</p>
-                                </div>
-                                <img id="imagePreview" class="hidden absolute inset-0 w-full h-full object-cover">
-                                <input type="file" id="imageInput" accept="image/*" multiple class="hidden" onchange="previewImage(this)" />
-                            </label>
-                            <div id="imgThumbs" class="hidden gap-2 mt-2 overflow-x-auto pb-1"></div>
-                            <p class="text-[10px] text-slate-500 leading-tight mt-1">İlk sıradaki fotoğraf kapak görseli olur. Köşesindeki çarpı ile fotoğrafı kaldırabilirsin.</p>
-                        </div>
-                        <div class="flex-1">
-                            <label class="block text-xs font-bold text-sky-700 mb-1">Ürün Kodu</label>
-                            <input type="text" id="p_code" class="w-full border-2 border-sky-200 bg-sky-50 rounded-lg p-2.5 text-lg font-black text-sky-800 text-center outline-none uppercase mb-2">
-                            <p class="text-[10px] text-slate-500 leading-tight">Müşterilerin sipariş numarasıdır.</p>
-                        </div>
+                    <div class="flex-1">
+                    <label class="block text-sm font-bold text-slate-700 mb-2">Ürün Fotoğrafları</label>
+                    <label class="flex flex-col items-center justify-center w-full h-28 border-2 border-slate-300 border-dashed rounded-xl cursor-pointer bg-slate-50 relative overflow-hidden">
+                    <div class="flex flex-col items-center justify-center pt-5 pb-6" id="uploadPlaceholder">
+                    <i class="ph-regular ph-upload-simple text-3xl text-slate-400 mb-2"></i>
+                    <p class="text-[11px] text-slate-500 px-4 text-center">Fotoğraf Seç (çoklu seçim yapabilirsin)</p>
+                    </div>
+                    <img id="imagePreview" class="hidden absolute inset-0 w-full h-full object-cover">
+                    <input type="file" id="imageInput" accept="image/*" multiple class="hidden" onchange="previewImage(this)" />
+                    </label>
+                    <div id="imgThumbs" class="hidden gap-2 mt-2 overflow-x-auto pb-1"></div>
+                    <p class="text-[10px] text-slate-500 leading-tight mt-1">İlk sıradaki fotoğraf kapak görseli olur. Köşesindeki çarpı ile fotoğrafı kaldırabilirsin.</p>
+                    </div>
+                    <div class="flex-1">
+                    <label class="block text-xs font-bold text-sky-700 mb-1">Ürün Kodu</label>
+                    <input type="text" id="p_code" class="w-full border-2 border-sky-200 bg-sky-50 rounded-lg p-2.5 text-lg font-black text-sky-800 text-center outline-none uppercase mb-2">
+                    <p class="text-[10px] text-slate-500 leading-tight">Müşterilerin sipariş numarasıdır.</p>
+                    </div>
                     </div>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-600 mb-1">Ürün Adı</label>
-                            <input type="text" id="p_name" required class="w-full border border-slate-300 rounded-lg p-2.5 text-sm outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-600 mb-1">Kategori</label>
-                            <select id="p_category" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm bg-white outline-none">
-                                <option>Figür / Model</option><option>Aksesuar</option><option>Dekorasyon</option><option>Fonksiyonel Parça</option><option>Diğer</option>
-                            </select>
-                        </div>
+                    <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Ürün Adı</label>
+                    <input type="text" id="p_name" required class="w-full border border-slate-300 rounded-lg p-2.5 text-sm outline-none">
+                    </div>
+                    <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Kategori</label>
+                    <select id="p_category" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm bg-white outline-none">
+                    <option>Figür / Model</option><option>Aksesuar</option><option>Dekorasyon</option><option>Fonksiyonel Parça</option><option>Diğer</option>
+                    </select>
+                    </div>
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-slate-600 mb-1">Açıklama (Müşteri Görecek)</label>
-                        <textarea id="p_desc" rows="2" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm outline-none"></textarea>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Açıklama (Müşteri Görecek)</label>
+                    <textarea id="p_desc" rows="2" class="w-full border border-slate-300 rounded-lg p-2.5 text-sm outline-none"></textarea>
                     </div>
 
                     <!-- MALİYET HESAPLAMA ALANI -->
                     <div class="bg-indigo-50 p-4 rounded-xl border border-indigo-100">
-                        <div class="grid grid-cols-3 gap-2">
-                            <div>
-                                <label class="block text-[10px] font-bold text-indigo-700 mb-1">Filament (Gr)</label>
-                                <input type="number" id="p_gram" oninput="autoCalculate()" class="w-full border border-indigo-200 rounded-lg p-2 text-sm font-bold">
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-bold text-indigo-700 mb-1">Süre (Dk)</label>
-                                <input type="number" id="p_time" oninput="autoCalculate()" class="w-full border border-indigo-200 rounded-lg p-2 text-sm font-bold">
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-bold text-indigo-700 mb-1">Aksesuar (₺)</label>
-                                <input type="number" id="p_acc" oninput="autoCalculate()" class="w-full border border-indigo-200 rounded-lg p-2 text-sm font-bold">
-                            </div>
-                        </div>
+                    <div class="grid grid-cols-3 gap-2">
+                    <div>
+                    <label class="block text-[10px] font-bold text-indigo-700 mb-1">Filament (Gr)</label>
+                    <input type="number" id="p_gram" oninput="autoCalculate()" class="w-full border border-indigo-200 rounded-lg p-2 text-sm font-bold">
+                    </div>
+                    <div>
+                    <label class="block text-[10px] font-bold text-indigo-700 mb-1">Süre (Dk)</label>
+                    <input type="number" id="p_time" oninput="autoCalculate()" class="w-full border border-indigo-200 rounded-lg p-2 text-sm font-bold">
+                    </div>
+                    <div>
+                    <label class="block text-[10px] font-bold text-indigo-700 mb-1">Aksesuar (₺)</label>
+                    <input type="number" id="p_acc" oninput="autoCalculate()" class="w-full border border-indigo-200 rounded-lg p-2 text-sm font-bold">
+                    </div>
+                    </div>
                     </div>
 
                     <div class="bg-sky-50 p-4 rounded-xl border border-sky-100 space-y-3">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-[10px] font-bold text-slate-500 mb-1">Katı Maliyet (₺)</label>
-                                <div class="w-full bg-slate-200/50 rounded-lg p-2 text-base font-bold text-slate-700 text-center" id="p_cost_display">0.00 ₺</div>
-                                <input type="hidden" id="p_cost_hidden" value="0">
-                            </div>
-                            <div>
-                                <label class="block text-[10px] font-bold text-sky-600 mb-1">Kâr Marjı (Maliyetin %'si)</label>
-                                <input type="number" id="p_margin" value="20" min="0" oninput="autoCalculate()" class="w-full border-2 border-sky-300 bg-white rounded-lg p-2 text-base font-bold text-sky-800 text-center">
-                            </div>
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">Satış Fiyatı (₺)</label>
-                            <input type="number" id="p_price" step="0.01" min="0" required class="w-full border-2 border-emerald-400 bg-white rounded-lg p-2.5 text-xl font-black text-emerald-700 text-center shadow-sm">
-                            <p class="text-[10px] text-slate-500 text-center mt-1">Fiyat = Maliyet + Maliyetin %X'i kadar kâr (örn. 24 ₺ maliyet, %20 kâr → 28.80 ₺)</p>
-                        </div>
+                    <div class="grid grid-cols-2 gap-4">
+                    <div>
+                    <label class="block text-[10px] font-bold text-slate-500 mb-1">Katı Maliyet (₺)</label>
+                    <div class="w-full bg-slate-200/50 rounded-lg p-2 text-base font-bold text-slate-700 text-center" id="p_cost_display">0.00 ₺</div>
+                    <input type="hidden" id="p_cost_hidden" value="0">
+                    </div>
+                    <div>
+                    <label class="block text-[10px] font-bold text-sky-600 mb-1">Kâr Marjı (Maliyetin %'si)</label>
+                    <input type="number" id="p_margin" value="20" min="0" oninput="autoCalculate()" class="w-full border-2 border-sky-300 bg-white rounded-lg p-2 text-base font-bold text-sky-800 text-center">
+                    </div>
+                    </div>
+                    <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Satış Fiyatı (₺)</label>
+                    <input type="number" id="p_price" step="0.01" min="0" required class="w-full border-2 border-emerald-400 bg-white rounded-lg p-2.5 text-xl font-black text-emerald-700 text-center shadow-sm">
+                    <p class="text-[10px] text-slate-500 text-center mt-1">Fiyat = Maliyet + Maliyetin %X'i kadar kâr (örn. 24 ₺ maliyet, %20 kâr → 28.80 ₺)</p>
+                    </div>
                     </div>
                 </form>
             </div>
@@ -301,7 +301,7 @@
         let settings = JSON.parse(localStorage.getItem('mete3d_settings')) || { 
             filKgPrice: 400, 
             hourlyRate: 20, 
-            phone: "905000000000",
+            phone: "9050000",
             delivery: "Yoğunluğa bağlı olarak 3-5 İş Günü"
         };
 
@@ -426,8 +426,8 @@
                 let imgList = (p["Fotograf URL"] || '').split(',').map(s => s.trim()).filter(Boolean);
                 imgList = imgList.map(u => {
                     if (u.includes('drive.google.com')) {
-                        const match = u.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
-                        if (match) u = `https://drive.google.com/uc?export=view&id=${match[1]}`;
+                    const match = u.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+                    if (match) u = `https://drive.google.com/uc?export=view&id=${match[1]}`;
                     }
                     return u;
                 });
@@ -451,46 +451,46 @@
                 let cardHTML = `
                 <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden hover:shadow-lg transition flex flex-col relative group">
                     <div class="h-40 sm:h-56 overflow-hidden bg-slate-100 relative">
-                        <img src="${imgUrl}" class="zoom-img w-full h-full object-cover" onclick="openLightbox('${galEnc}')">
-                        <span class="absolute top-2 left-2 bg-slate-900/80 text-white backdrop-blur text-[10px] font-bold px-2 py-1 rounded-md">${p.Kategori || 'Genel'}</span>
-                        <span class="absolute top-2 right-2 bg-sky-500 text-white text-[10px] font-black px-2 py-1 rounded-md shadow-sm">${uCode}</span>
-                        ${imgList.length > 1 ? `<span class="absolute bottom-2 right-2 bg-slate-900/80 text-white backdrop-blur text-[10px] font-bold px-2 py-1 rounded-md flex items-center gap-1"><i class="ph-fill ph-images-square text-xs"></i> ${imgList.length} Foto</span>` : ''}
+                    <img src="${imgUrl}" class="zoom-img w-full h-full object-cover" onclick="openLightbox('${galEnc}')">
+                    <span class="absolute top-2 left-2 bg-slate-900/80 text-white backdrop-blur text-[10px] font-bold px-2 py-1 rounded-md">${p.Kategori || 'Genel'}</span>
+                    <span class="absolute top-2 right-2 bg-sky-500 text-white text-[10px] font-black px-2 py-1 rounded-md shadow-sm">${uCode}</span>
+                    ${imgList.length > 1 ? `<span class="absolute bottom-2 right-2 bg-slate-900/80 text-white backdrop-blur text-[10px] font-bold px-2 py-1 rounded-md flex items-center gap-1"><i class="ph-fill ph-images-square text-xs"></i> ${imgList.length} Foto</span>` : ''}
                     </div>
                     <div class="p-3 sm:p-4 flex-1 flex flex-col">
-                        <h3 class="font-bold text-sm sm:text-lg text-slate-800 leading-tight mb-1 line-clamp-2">${p["Urun Adi"] || 'İsimsiz'}</h3>
-                        <p class="text-[11px] sm:text-xs text-slate-500 mb-3 line-clamp-3 whitespace-pre-wrap">${p.Aciklama || ''}</p>
+                    <h3 class="font-bold text-sm sm:text-lg text-slate-800 leading-tight mb-1 line-clamp-2">${p["Urun Adi"] || 'İsimsiz'}</h3>
+                    <p class="text-[11px] sm:text-xs text-slate-500 mb-3 line-clamp-3 whitespace-pre-wrap">${p.Aciklama || ''}</p>
 
-                        <div class="mt-auto pt-2 border-t border-slate-100 space-y-2">`;
+                    <div class="mt-auto pt-2 border-t border-slate-100 space-y-2">`;
 
                 if(isAdmin) {
                     const safeP = encodeURIComponent(JSON.stringify(p));
                     cardHTML += `
-                            <div class="flex justify-between text-[10px] sm:text-xs">
-                                <span class="text-slate-500 font-medium">Maliyet / Kâr:</span>
-                                <span class="font-bold text-slate-700">${cost.toFixed(2)} ₺ <span class="text-emerald-500">(%${profitRate.toFixed(0)})</span></span>
-                            </div>
-                            <div class="flex justify-between items-center text-[10px] sm:text-xs font-bold text-indigo-500 mb-1">${techDetails}</div>
-                            <div class="flex items-center justify-between">
-                                <span class="text-base sm:text-xl font-black text-slate-900">${price.toFixed(2)} ₺</span>
-                                <div class="flex gap-1">
-                                    <button onclick="editProduct('${safeP}')" class="bg-slate-100 hover:bg-sky-500 hover:text-white text-slate-600 p-2 rounded-lg transition"><i class="ph-bold ph-pencil-simple"></i></button>
-                                    <button onclick="deleteProduct('${p.ID}')" class="bg-slate-100 hover:bg-rose-500 hover:text-white text-rose-500 p-2 rounded-lg transition"><i class="ph-bold ph-trash"></i></button>
-                                </div>
-                            </div>`;
+                    <div class="flex justify-between text-[10px] sm:text-xs">
+                    <span class="text-slate-500 font-medium">Maliyet / Kâr:</span>
+                    <span class="font-bold text-slate-700">${cost.toFixed(2)} ₺ <span class="text-emerald-500">(%${profitRate.toFixed(0)})</span></span>
+                    </div>
+                    <div class="flex justify-between items-center text-[10px] sm:text-xs font-bold text-indigo-500 mb-1">${techDetails}</div>
+                    <div class="flex items-center justify-between">
+                    <span class="text-base sm:text-xl font-black text-slate-900">${price.toFixed(2)} ₺</span>
+                    <div class="flex gap-1">
+                    <button onclick="editProduct('${safeP}')" class="bg-slate-100 hover:bg-sky-500 hover:text-white text-slate-600 p-2 rounded-lg transition"><i class="ph-bold ph-pencil-simple"></i></button>
+                    <button onclick="deleteProduct('${p.ID}')" class="bg-slate-100 hover:bg-rose-500 hover:text-white text-rose-500 p-2 rounded-lg transition"><i class="ph-bold ph-trash"></i></button>
+                    </div>
+                    </div>`;
                 } else {
                     cardHTML += `
-                            <div class="flex justify-between items-center mb-2">
-                                <span class="text-xs text-slate-500 font-medium">Fiyat:</span>
-                                <span class="text-lg sm:text-xl font-black text-emerald-600">${price.toFixed(2)} ₺</span>
-                            </div>
-                            <div class="flex gap-2">
-                                <button onclick="confirmOrder('${waLink}')" class="flex-1 bg-[#25D366] hover:bg-[#1ebd5a] text-white font-bold py-2 sm:py-2.5 rounded-xl flex items-center justify-center gap-2 text-xs sm:text-sm shadow-md transition transform active:scale-95">
-                                    <i class="ph-fill ph-whatsapp-logo text-lg"></i> Sipariş Ver
-                                </button>
-                                <button onclick="shareProduct('${shareEnc}')" class="w-11 shrink-0 bg-slate-800 hover:bg-slate-700 text-white rounded-xl flex items-center justify-center shadow-md transition transform active:scale-95" title="Ürünü Paylaş">
-                                    <i class="ph-bold ph-share-fat text-lg"></i>
-                                </button>
-                            </div>`;
+                    <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs text-slate-500 font-medium">Fiyat:</span>
+                    <span class="text-lg sm:text-xl font-black text-emerald-600">${price.toFixed(2)} ₺</span>
+                    </div>
+                    <div class="flex gap-2">
+                    <button onclick="confirmOrder('${waLink}')" class="flex-1 bg-[#25D366] hover:bg-[#1ebd5a] text-white font-bold py-2 sm:py-2.5 rounded-xl flex items-center justify-center gap-2 text-xs sm:text-sm shadow-md transition transform active:scale-95">
+                    <i class="ph-fill ph-whatsapp-logo text-lg"></i> Sipariş Ver
+                    </button>
+                    <button onclick="shareProduct('${shareEnc}')" class="w-11 shrink-0 bg-slate-800 hover:bg-slate-700 text-white rounded-xl flex items-center justify-center shadow-md transition transform active:scale-95" title="Ürünü Paylaş">
+                    <i class="ph-bold ph-share-fat text-lg"></i>
+                    </button>
+                    </div>`;
                 }
                 cardHTML += `</div></div></div>`;
                 grid.innerHTML += cardHTML;
@@ -665,12 +665,90 @@
             }
         }
 
-        async function uploadToImgBB(file) {
-            const fd = new FormData(); fd.append('image', file);
-            try { const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: fd });
-                  const data = await res.json(); if (data.success) return data.data.url;
-            } catch (e) {} return null;
+        // --- FOTOĞRAF YÜKLEME (ImgBB) --- DÜZELTİLMİŞ BÖLÜM ---
+        // "Yüklenemedi" hatasının kaynağı: ImgBB, FormData ile gönderilen HAM dosyayı bazen reddediyor (bilinen sorundur).
+        // Güvenilir yöntem: dosyayı base64'e çevirip 'image' alanıyla göndermek ve adını uzantıyla bildirmek.
+        // Zincir sırasıyla dener: 1) base64 (en uyumlu) → 2) orijinal dosya → 3) dönüştürülmüş dosya.
+        let lastUploadError = "";
+
+        function fileToBase64(file) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = () => resolve(String(reader.result).split(',')[1]); // "data:image/jpeg;base64," önekini atar
+                reader.onerror = () => reject(reader.error || new Error('Dosya okunamadı'));
+                reader.readAsDataURL(file);
+            });
         }
+
+        // Problemli görselleri (uzantısız / 4 MB üstü / tarayıcının açamadığı tür) en fazla 1600px
+        // güvenli bir JPEG'e çevirir; çözemezse orijinal dosyayı olduğu gibi döndürür.
+        function normalizeImageToJpeg(file, maxDim = 1600, quality = 0.85) {
+            return new Promise((resolve) => {
+                if (file.type === 'image/gif') return resolve(file); // GIF animasyonu korunur
+                const objUrl = URL.createObjectURL(file);
+                const img = new Image();
+                const done = (result) => { URL.revokeObjectURL(objUrl); resolve(result); };
+                img.onload = () => {
+                    try {
+                        const w0 = img.naturalWidth || 1, h0 = img.naturalHeight || 1;
+                        const scale = Math.min(1, maxDim / w0, maxDim / h0);
+                        const w = Math.max(1, Math.round(w0 * scale)), h = Math.max(1, Math.round(h0 * scale));
+                        const canvas = document.createElement('canvas');
+                        canvas.width = w; canvas.height = h;
+                        const ctx = canvas.getContext('2d');
+                        ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, w, h); // saydam zeminler beyaza döner
+                        ctx.drawImage(img, 0, 0, w, h);
+                        canvas.toBlob((blob) => done(blob && blob.size > 0 ? blob : file), 'image/jpeg', quality);
+                    } catch (e) { done(file); }
+                };
+                img.onerror = () => done(file);
+                img.src = objUrl;
+            });
+        }
+
+        async function postToImgBB(fd) {
+            try {
+                const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: 'POST', body: fd });
+                let data = null; try { data = await res.json(); } catch (e) {}
+                if (data && data.success && data.data && data.data.url) return data.data.url;
+                if (data && data.error && data.error.message) lastUploadError = data.error.message;
+                else lastUploadError = 'Sunucu yanıtı okunamadı (HTTP ' + res.status + ')';
+            } catch (e) { lastUploadError = 'Bağlantı hatası: ' + (e.message || e); }
+            return null;
+        }
+
+        async function uploadToImgBB(file) {
+            lastUploadError = "";
+            try {
+                // Gerekirse görseli güvenli JPEG'e çevir (4 MB üstü veya uzantısız/uyumsuz dosyalar)
+                let safeFile = file;
+                const hasGoodExt = /\.(jpe?g|png|webp|gif|bmp|tiff?)$/i.test(file.name || '');
+                if (!hasGoodExt || (file.size || 0) > 4 * 1024 * 1024) {
+                    try { safeFile = await normalizeImageToJpeg(file); } catch (e) { safeFile = file; }
+                }
+                const baseName = ((((safeFile.name || 'urun')).replace(/\.[^.]+$/, '')) || 'urun') + '.jpg';
+
+                // Deneme 1: base64 + görsel adı (ImgBB'nin en sorunsuz kabul ettiği yöntem)
+                let b64 = null;
+                try { b64 = await fileToBase64(safeFile); } catch (e) { b64 = null; }
+                if (b64) {
+                    const fd = new FormData(); fd.append('image', b64); fd.append('name', baseName);
+                    const url = await postToImgBB(fd);
+                    if (url) return url;
+                }
+                // Deneme 2: dosya dönüştürüldüyse orijinal dosyayı da dene
+                if (safeFile !== file) {
+                    const fd = new FormData(); fd.append('image', file, file.name || 'urun.jpg');
+                    const url = await postToImgBB(fd);
+                    if (url) return url;
+                }
+                // Deneme 3: ham dosya (eski yöntem, yedek olarak korunur)
+                const fd = new FormData(); fd.append('image', safeFile, safeFile.name || 'urun.jpg');
+                return await postToImgBB(fd);
+            } catch (e) { lastUploadError = 'Beklenmeyen hata: ' + (e.message || e); }
+            return null;
+        }
+        // --- DÜZELTİLMİŞ BÖLÜM SONU ---
 
         async function saveProduct() {
             const cost = Number(document.getElementById('p_cost_hidden').value); 
@@ -685,7 +763,7 @@
             for(let i = 0; i < newImageFiles.length; i++) {
                 btn.innerHTML = `Fotoğraf Yükleniyor (${i + 1}/${newImageFiles.length})...`;
                 const upUrl = await uploadToImgBB(newImageFiles[i].file);
-                if(upUrl) fUrls.push(upUrl); else alert("Bir fotoğraf yüklenemedi, o görsel atlandı.");
+                if(upUrl) fUrls.push(upUrl); else alert("Bir fotoğraf yüklenemedi, o görsel atlandı.\nSebep: " + (lastUploadError || "bilinmeyen hata"));
             }
             btn.innerHTML = 'Kaydediliyor...';
             const fUrl = fUrls.join(',');
